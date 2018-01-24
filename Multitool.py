@@ -7,7 +7,7 @@ PyQt5 Multitool
 This program puts together multiple widgets
 on a single application.
 
-Version: 0.1 alpha
+Version: 0.2 beta
 
 Author: Fernando Daniel Jaime
 Last edited: January 2018
@@ -19,6 +19,8 @@ from PyQt5.QtWidgets import ( QAction, QApplication,
 from PyQt5.QtGui import QIcon, QPixmap
 from PyQt5.QtCore import Qt
 
+from mouseclicker.mouseclicker import MouseClicker
+
 
 class Multitool(QMainWindow, QWidget):
     def __init__(self):
@@ -26,6 +28,13 @@ class Multitool(QMainWindow, QWidget):
 
         self.statusbar = self.statusBar()
         self.statusBar().showMessage('Ready')
+
+        self.stack1 = QWidget() # Mouse Clicker
+
+        self.stack1UI() # Mouse Clicker
+
+        self.Stack = QStackedWidget (self)
+        self.Stack.addWidget (self.stack1) # Mouse Clicker
 
         # General actions starts -------------------------------------
         exitAction = QAction(QIcon('icons/exit.png'), '&Exit', self)
@@ -46,10 +55,15 @@ class Multitool(QMainWindow, QWidget):
         viewToolbarAction.setStatusTip('View toolbar')
         viewToolbarAction.setChecked(True)
         viewToolbarAction.triggered.connect(self.toggleToolBar)
-        # General actions ends -------------------------------------
+        # General actions ends ---------------------------------------
 
+        # Widgets actions starts -------------------------------------
+        mouseClickerAction = QAction(QIcon('icons/mouse.png'),'Mouse Clicker', self)
+        mouseClickerAction.setStatusTip('Mouse Clicker')
+        mouseClickerAction.triggered.connect(lambda: self.display(0))
+        # Widget actions ends ----------------------------------------
 
-        # Menu bar creation starts -------------------------------------
+        # Menu bar creation starts -----------------------------------
         menubar = self.menuBar()
         fileMenu = menubar.addMenu('&File')
         fileMenu.addAction(exitAction)
@@ -58,15 +72,23 @@ class Multitool(QMainWindow, QWidget):
         viewMenu.addAction(viewStatAction)
         viewMenu.addAction(viewToolbarAction)
 
+        viewMenuWidget = QMenu('List widget', self)
+        viewMenuWidget.addAction(mouseClickerAction)
+        viewMenu.addMenu(viewMenuWidget)
+
         helpMenu = menubar.addMenu('&Help')
         helpMenu.addAction(aboutAction)
         # Menu bar creation ends -------------------------------------
 
         # Toolbar creation starts -------------------------------------
-        self.toolbar1 = self.addToolBar('Exit')
-        self.toolbar1.addAction(exitAction)
+        self.toolbar1 = self.addToolBar('Widgets')
+        self.toolbar1.addAction(mouseClickerAction)
+
+        self.toolbar2 = self.addToolBar('Exit')
+        self.toolbar2.addAction(exitAction)
         # Toolbar creation ends -------------------------------------
 
+        self.setCentralWidget(self.Stack)
         self.setGeometry(300, 300, 700, 400)
         self.setWindowTitle('Multitool')
         self.setWindowIcon(QIcon('icons/biohazard.svg'))
@@ -83,8 +105,10 @@ class Multitool(QMainWindow, QWidget):
     def toggleToolBar(self, state):
         if state:
             self.toolbar1.show()
+            self.toolbar2.show()
         else:
             self.toolbar1.hide()
+            self.toolbar2.hide()
 
 
     def minimizeToTray(self, state):
@@ -97,11 +121,23 @@ class Multitool(QMainWindow, QWidget):
                 2000)
 
 
+    # Stacked widgets added to layout start----------------------
+    def stack1UI(self):
+        self.layout = QHBoxLayout()
+        self.layout.addWidget(MouseClicker())
+        self.stack1.setLayout(self.layout)
+
+
+    def display(self,i):
+        self.Stack.setCurrentIndex(i)
+    # Stacked widgets added to layout end------------------------
+
+
     def about(self):
         pixmap = QPixmap('icons/biohazard.svg')
         msg = QMessageBox(QMessageBox.Information, 'About Multitool',
             "<b>Aplication name:</b> Multitool" +
-            "<br> <b>Version:</b> V0.1 alpha" +
+            "<br> <b>Version:</b> V0.2 beta" +
             "<br><b>Description:</b> This application puts together many" +
             "<br>widgets into a single application." +
             "<br><b>Details:</b> Programmed and designed with Python 3.5 and PyQt5." +
