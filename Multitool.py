@@ -7,7 +7,7 @@ PyQt5 Multitool
 This program puts together multiple widgets
 on a single application.
 
-Version: 0.3.1 beta
+Version: 0.3.5 beta
 
 Author: Fernando Daniel Jaime
 Last edited: January 2018
@@ -29,6 +29,11 @@ class Multitool(QMainWindow, QWidget):
 
         self.statusbar = self.statusBar()
         self.statusBar().showMessage('Ready')
+
+        self.trayActions()
+        self.trayMenu()
+        self.trayIcon.setIcon(QIcon('icons/biohazard.svg'))
+        self.trayIcon.show()
 
         self.stack1 = QWidget() # Mouse Clicker
         self.stack2 = QWidget() # Screenshot
@@ -64,6 +69,11 @@ class Multitool(QMainWindow, QWidget):
         viewToolbarAction.setStatusTip('View toolbar')
         viewToolbarAction.setChecked(True)
         viewToolbarAction.triggered.connect(self.toggleToolBar)
+
+        minimizeToTrayAction = QAction('Minimize to Tray', self, checkable=True)
+        minimizeToTrayAction.setStatusTip('Minimize to Tray')
+        minimizeToTrayAction.setChecked(False)
+        minimizeToTrayAction.triggered.connect(self.minimizeToTray)
         # General actions ends ---------------------------------------
 
         # Widgets actions starts -------------------------------------
@@ -85,6 +95,7 @@ class Multitool(QMainWindow, QWidget):
         viewMenu = menubar.addMenu('View')
         viewMenu.addAction(viewStatAction)
         viewMenu.addAction(viewToolbarAction)
+        viewMenu.addAction(minimizeToTrayAction)
 
         viewMenuWidget = QMenu('List widget', self)
         viewMenuWidget.addAction(mouseClickerAction)
@@ -165,11 +176,53 @@ class Multitool(QMainWindow, QWidget):
     # Stacked widgets added to layout end------------------------
 
 
+    def trayActions(self):
+        self.minimizeAction = QAction(QIcon('icons/minimize.png'), "Mi&nimize", self,
+                triggered=self.hide)
+        self.maximizeAction = QAction(QIcon('icons/maximize.jpeg'), "Ma&ximize", self,
+                triggered=self.showMaximized)
+        self.restoreAction = QAction(QIcon('icons/restore.png'), "&Restore", self,
+                triggered=self.showNormal)
+        self.quitAction = QAction(QIcon('icons/exit.png'), "&Quit", self,
+                triggered=QApplication.instance().quit)
+
+
+    def trayMenu(self):
+        self.trayIconMenu = QMenu(self)
+        self.trayIconMenu.addAction(self.minimizeAction)
+        self.trayIconMenu.addAction(self.maximizeAction)
+        self.trayIconMenu.addAction(self.restoreAction)
+        self.trayIconMenu.addSeparator()
+        self.trayIconMenu.addAction(self.quitAction)
+
+        self.trayIcon = QSystemTrayIcon(self)
+        self.trayIcon.setContextMenu(self.trayIconMenu)
+
+
+    # When closing from title bar close button, it will minimize to tray
+    def closeEvent(self, event):
+        reply = QMessageBox.question(self, 'Message',
+            "This action will minimize to tray.", QMessageBox.Yes |
+            QMessageBox.Cancel, QMessageBox.Cancel)
+
+        if reply == QMessageBox.Yes:
+            self.hide()
+            self.trayIcon.showMessage(
+                "Tray Program",
+                "Application was minimized to tray",
+                QSystemTrayIcon.Information,
+                2000)
+            event.accept()
+        else:
+            self.show()
+            event.ignore()
+
+
     def about(self):
         pixmap = QPixmap('icons/biohazard.svg')
         msg = QMessageBox(QMessageBox.Information, 'About Multitool',
             "<b>Aplication name:</b> Multitool" +
-            "<br> <b>Version:</b> V0.3.1 beta" +
+            "<br> <b>Version:</b> V0.3.5 beta" +
             "<br><b>Description:</b> This application puts together many" +
             "<br>widgets into a single application." +
             "<br><b>Details:</b> Programmed and designed with Python 3.5 and PyQt5." +
@@ -180,8 +233,53 @@ class Multitool(QMainWindow, QWidget):
         msg.exec_()
 
 
+    def keyPressEvent(self, event):
+        if event.key() == Qt.Key_Escape:
+            reply = QMessageBox.question(self, 'Message',
+            "Are you sure to quit?", QMessageBox.Yes |
+            QMessageBox.Cancel, QMessageBox.Cancel)
+
+            if reply == QMessageBox.Yes:
+                self.statusBar().showMessage('Quiting...')
+                QApplication.instance().quit()
+            else:
+                event.ignore()
+
+
+    # Multitool context menu
+    def contextMenuEvent(self, event):
+        cmenu = QMenu(self)
+        quitAct = cmenu.addAction(QIcon('icons/exit.png'), "Quit")
+        cmenu.addSeparator()
+        newMultitoolAction = cmenu.addAction(QIcon('icons/new.png'),
+            "New Multitool")
+        minimizeAction = cmenu.addAction(QIcon('icons/minimize.png'),
+            "Minimize to tray")
+        action = cmenu.exec_(self.mapToGlobal(event.pos()))
+
+        if action == quitAct:
+            QApplication.instance().quit()
+        if action == newMultitoolAction:
+            self.__init__()
+            self.setGeometry(350, 350, 700, 400)
+        if action == minimizeAction:
+            self.hide()
+            self.trayIcon.showMessage(
+                "Tray Program",
+                "Application was minimized to tray",
+                QSystemTrayIcon.Information,
+                2000)
+
+
 def main():
     app = QApplication(sys.argv)
+
+    if not QSystemTrayIcon.isSystemTrayAvailable():
+        QMessageBox.critical(None, "Systray",
+                "I couldn't detect any system tray on this system.")
+        sys.exit(1)
+
+    QApplication.setQuitOnLastWindowClosed(False)
 
     ex = Multitool()
     sys.exit(app.exec_())
