@@ -7,7 +7,7 @@ PyQt5 Multitool
 This program puts together multiple widgets
 on a single application.
 
-Version: 0.3.5 beta
+Version: 0.4 beta
 
 Author: Fernando Daniel Jaime
 Last edited: January 2018
@@ -21,6 +21,8 @@ from PyQt5.QtCore import Qt
 
 from mouseclicker.mouseclicker import MouseClicker
 from screenShot.screenshot import Screenshot
+from player.player import (VideoWidget, PlaylistModel, PlayerControls,
+    FrameProcessor, HistogramWidget, Player)
 
 
 class Multitool(QMainWindow, QWidget):
@@ -37,13 +39,16 @@ class Multitool(QMainWindow, QWidget):
 
         self.stack1 = QWidget() # Mouse Clicker
         self.stack2 = QWidget() # Screenshot
+        self.stack3 = QWidget() # Player
 
         self.stack1UI() # Mouse Clicker
         self.stack2UI() # Screenshot
+        self.stack3UI() # Player
 
         self.Stack = QStackedWidget (self)
         self.Stack.addWidget (self.stack1) # Mouse Clicker
         self.Stack.addWidget (self.stack2) # Screenshot
+        self.Stack.addWidget (self.stack3) # Player
 
         # General actions starts -------------------------------------
         exitAction = QAction(QIcon('icons/exit.png'), '&Exit', self)
@@ -84,6 +89,10 @@ class Multitool(QMainWindow, QWidget):
         screeenShotAction = QAction(QIcon('icons/screenshot.png'),'ScreenShot', self)
         screeenShotAction.setStatusTip('ScreenShot')
         screeenShotAction.triggered.connect(lambda: self.display(1))
+
+        playerAction = QAction(QIcon('icons/player.jpeg'),'Player', self)
+        playerAction.setStatusTip('Player')
+        playerAction.triggered.connect(lambda: self.display(2))
         # Widget actions ends ----------------------------------------
 
         # Menu bar creation starts -----------------------------------
@@ -100,6 +109,7 @@ class Multitool(QMainWindow, QWidget):
         viewMenuWidget = QMenu('List widget', self)
         viewMenuWidget.addAction(mouseClickerAction)
         viewMenuWidget.addAction(screeenShotAction)
+        viewMenuWidget.addAction(playerAction)
         viewMenu.addMenu(viewMenuWidget)
 
         helpMenu = menubar.addMenu('&Help')
@@ -113,6 +123,7 @@ class Multitool(QMainWindow, QWidget):
         self.toolbar2 = self.addToolBar('Widgets')
         self.toolbar2.addAction(mouseClickerAction)
         self.toolbar2.addAction(screeenShotAction)
+        self.toolbar2.addAction(playerAction)
 
         self.toolbar3 = self.addToolBar('Exit')
         self.toolbar3.addAction(exitAction)
@@ -171,6 +182,12 @@ class Multitool(QMainWindow, QWidget):
         self.stack2.setLayout(self.layout)
 
 
+    def stack3UI(self):
+        self.layout = QHBoxLayout()
+        self.layout.addWidget(Player(sys.argv[1:]))
+        self.stack3.setLayout(self.layout)
+
+
     def display(self,i):
         self.Stack.setCurrentIndex(i)
     # Stacked widgets added to layout end------------------------
@@ -222,7 +239,7 @@ class Multitool(QMainWindow, QWidget):
         pixmap = QPixmap('icons/biohazard.svg')
         msg = QMessageBox(QMessageBox.Information, 'About Multitool',
             "<b>Aplication name:</b> Multitool" +
-            "<br> <b>Version:</b> V0.3.5 beta" +
+            "<br> <b>Version:</b> V0.4 beta" +
             "<br><b>Description:</b> This application puts together many" +
             "<br>widgets into a single application." +
             "<br><b>Details:</b> Programmed and designed with Python 3.5 and PyQt5." +
