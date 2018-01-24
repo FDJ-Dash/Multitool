@@ -3,7 +3,7 @@
 ## Is this fixing an existing issue or adding a new functionality?
 
 - [ ] Fixing existing issue
-- [ ] Adding new funtionality
+- [ ] Adding new functionality
 
 ## If this is fixing an issue please name it or describe it.
 
