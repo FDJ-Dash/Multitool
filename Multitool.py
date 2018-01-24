@@ -7,7 +7,7 @@ PyQt5 Multitool
 This program puts together multiple widgets
 on a single application.
 
-Version: 0.6 beta
+Version: 0.7 beta
 
 Author: Fernando Daniel Jaime
 Last edited: January 2018
@@ -25,6 +25,7 @@ from player.player import (VideoWidget, PlaylistModel, PlayerControls,
     FrameProcessor, HistogramWidget, Player)
 from calculator.calculator import Button, Calculator
 from camera.camera import Camera, ImageSettings, VideoSettings
+from tetrix.tetrix import TetrixWindow, TetrixBoard, TetrixPiece
 
 
 class Multitool(QMainWindow, QWidget):
@@ -44,12 +45,14 @@ class Multitool(QMainWindow, QWidget):
         self.stack3 = QWidget() # Player
         self.stack4 = QWidget() # Calculator
         self.stack5 = QWidget() # Camera
+        self.stack6 = QWidget() # Tetrix
 
         self.stack1UI() # Mouse Clicker
         self.stack2UI() # Screenshot
         self.stack3UI() # Player
         self.stack4UI() # Calculator
         self.stack5UI() # Camera
+        self.stack6UI() # Tetrix
 
         self.Stack = QStackedWidget (self)
         self.Stack.addWidget (self.stack1) # Mouse Clicker
@@ -57,6 +60,7 @@ class Multitool(QMainWindow, QWidget):
         self.Stack.addWidget (self.stack3) # Player
         self.Stack.addWidget (self.stack4) # Calculator
         self.Stack.addWidget (self.stack5) # Camera
+        self.Stack.addWidget (self.stack6) # Tetrix
 
         # General actions starts -------------------------------------
         exitAction = QAction(QIcon('icons/exit.png'), '&Exit', self)
@@ -109,6 +113,10 @@ class Multitool(QMainWindow, QWidget):
         cameraAction = QAction(QIcon('icons/camera.jpeg'),'Camera', self)
         cameraAction.setStatusTip('Camera')
         cameraAction.triggered.connect(lambda: self.display(4))
+
+        tetrixAction = QAction(QIcon('icons/tetrix.png'),'Tetrix', self)
+        tetrixAction.setStatusTip('Tetrix')
+        tetrixAction.triggered.connect(lambda: self.display(5))
         # Widget actions ends ----------------------------------------
 
         # Menu bar creation starts -----------------------------------
@@ -130,6 +138,9 @@ class Multitool(QMainWindow, QWidget):
         viewMenuWidget.addAction(cameraAction)
         viewMenu.addMenu(viewMenuWidget)
 
+        gamesMenu = menubar.addMenu('&Games')
+        gamesMenu.addAction(tetrixAction)
+
         helpMenu = menubar.addMenu('&Help')
         helpMenu.addAction(aboutAction)
         # Menu bar creation ends -------------------------------------
@@ -145,8 +156,11 @@ class Multitool(QMainWindow, QWidget):
         self.toolbar2.addAction(calculatorAction)
         self.toolbar2.addAction(cameraAction)
 
-        self.toolbar3 = self.addToolBar('Exit')
-        self.toolbar3.addAction(exitAction)
+        self.toolbar3 = self.addToolBar('Games')
+        self.toolbar3.addAction(tetrixAction)
+
+        self.toolbar4 = self.addToolBar('Exit')
+        self.toolbar4.addAction(exitAction)
         # Toolbar creation ends -------------------------------------
 
         self.setCentralWidget(self.Stack)
@@ -168,10 +182,12 @@ class Multitool(QMainWindow, QWidget):
             self.toolbar1.show()
             self.toolbar2.show()
             self.toolbar3.show()
+            self.toolbar4.show()
         else:
             self.toolbar1.hide()
             self.toolbar2.hide()
             self.toolbar3.hide()
+            self.toolbar4.hide()
 
 
     def minimizeToTray(self, state):
@@ -218,6 +234,12 @@ class Multitool(QMainWindow, QWidget):
         self.layout = QHBoxLayout()
         self.layout.addWidget(Camera())
         self.stack5.setLayout(self.layout)
+
+
+    def stack6UI(self):
+        self.layout = QHBoxLayout()
+        self.layout.addWidget(TetrixWindow())
+        self.stack6.setLayout(self.layout)
 
 
     def display(self,i):
@@ -271,7 +293,7 @@ class Multitool(QMainWindow, QWidget):
         pixmap = QPixmap('icons/biohazard.svg')
         msg = QMessageBox(QMessageBox.Information, 'About Multitool',
             "<b>Aplication name:</b> Multitool" +
-            "<br> <b>Version:</b> V0.6 beta" +
+            "<br> <b>Version:</b> V0.7 beta" +
             "<br><b>Description:</b> This application puts together many" +
             "<br>widgets into a single application." +
             "<br><b>Details:</b> Programmed and designed with Python 3.5 and PyQt5." +

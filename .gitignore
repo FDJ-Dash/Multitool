@@ -1,0 +1,9 @@
+*.pyc
+log.txt
+*.log
+__pycache__/
+bin/
+lib/
+pip-selfcheck.json
+include/
+ignoreFolder/
