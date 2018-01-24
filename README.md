@@ -41,25 +41,25 @@ This is the Github page of xdotool: https://github.com/jordansissel/xdotool
 So for you need to download my multitool from github but ill make a pip instalable for it in the future..
 Below are some screenshots of multitool working.
 
-### Mutitool - Mouse Clicker
+### Multitool - Mouse Clicker
 ![multitool_clicker](https://user-images.githubusercontent.com/26487160/35359442-de5b1c5e-0138-11e8-9a53-06a6e92e3afb.jpg)
 
 ----------------------------------------------------------------
-### Mutitool - Screenshot widget
+### Multitool - Screenshot widget
 ![multitool_screenshot](https://user-images.githubusercontent.com/26487160/35361424-166343ae-0140-11e8-9fb6-9050b496b8a1.jpg)
 
 ----------------------------------------------------------------
-### Mutitool - Player
+### Multitool - Player
 ![multitool_player](https://user-images.githubusercontent.com/26487160/35361450-289112e0-0140-11e8-811b-63db8ad12db2.jpg)
 
 ----------------------------------------------------------------
-### Mutitool - Calculator
+### Multitool - Calculator
 ![multitool_calculator](https://user-images.githubusercontent.com/26487160/35361472-383ea5f4-0140-11e8-8c90-585451a9b064.jpg)
 
 ----------------------------------------------------------------
-### Mutitool - Camera
+### Multitool - Camera
 ![multitool_camera](https://user-images.githubusercontent.com/26487160/35361482-4316d514-0140-11e8-89f8-72d4bf2fad6d.jpg)
 
 ----------------------------------------------------------------
-### Mutitool - Tetrix game
+### Multitool - Tetrix game
 ![multitool_tetrix](https://user-images.githubusercontent.com/26487160/35361493-519976b4-0140-11e8-8918-dd29c7bd8809.jpg)
