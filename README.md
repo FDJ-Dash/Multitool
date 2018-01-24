@@ -26,7 +26,7 @@ Multitool runs witn python 3.5+ and PyQt5
 ----------------------------------------------------------------
 ### How to install requirements
 
-pip3 install -r requirements.txt
+pip3 install -r requirements.txt (/path/to/requirements.txt - if you are not on same folder)
 
 ----------------------------------------------------------------
 ### Install xdotool
