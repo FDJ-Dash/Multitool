@@ -7,7 +7,7 @@ PyQt5 Multitool
 This program puts together multiple widgets
 on a single application.
 
-Version: 0.3 beta
+Version: 0.3.1 beta
 
 Author: Fernando Daniel Jaime
 Last edited: January 2018
@@ -46,6 +46,11 @@ class Multitool(QMainWindow, QWidget):
         exitAction.setStatusTip('Exit application')
         exitAction.triggered.connect(QApplication.instance().quit)
 
+        newMultitoolAction = QAction(QIcon('icons/new.png'), '&New Multitool', self)
+        newMultitoolAction.setShortcut('Ctrl+N')
+        newMultitoolAction.setStatusTip('New Multitool')
+        newMultitoolAction.triggered.connect(self.newMultitoolWindow)
+
         aboutAction=QAction(QIcon('icons/biohazard.svg'),'About',self)
         aboutAction.setStatusTip('About')
         aboutAction.triggered.connect(self.about)
@@ -74,6 +79,7 @@ class Multitool(QMainWindow, QWidget):
         # Menu bar creation starts -----------------------------------
         menubar = self.menuBar()
         fileMenu = menubar.addMenu('&File')
+        fileMenu.addAction(newMultitoolAction)
         fileMenu.addAction(exitAction)
 
         viewMenu = menubar.addMenu('View')
@@ -90,12 +96,15 @@ class Multitool(QMainWindow, QWidget):
         # Menu bar creation ends -------------------------------------
 
         # Toolbar creation starts -------------------------------------
-        self.toolbar1 = self.addToolBar('Widgets')
-        self.toolbar1.addAction(mouseClickerAction)
-        self.toolbar1.addAction(screeenShotAction)
+        self.toolbar1 = self.addToolBar('File')
+        self.toolbar1.addAction(newMultitoolAction)
 
-        self.toolbar2 = self.addToolBar('Exit')
-        self.toolbar2.addAction(exitAction)
+        self.toolbar2 = self.addToolBar('Widgets')
+        self.toolbar2.addAction(mouseClickerAction)
+        self.toolbar2.addAction(screeenShotAction)
+
+        self.toolbar3 = self.addToolBar('Exit')
+        self.toolbar3.addAction(exitAction)
         # Toolbar creation ends -------------------------------------
 
         self.setCentralWidget(self.Stack)
@@ -116,9 +125,11 @@ class Multitool(QMainWindow, QWidget):
         if state:
             self.toolbar1.show()
             self.toolbar2.show()
+            self.toolbar3.show()
         else:
             self.toolbar1.hide()
             self.toolbar2.hide()
+            self.toolbar3.hide()
 
 
     def minimizeToTray(self, state):
@@ -129,6 +140,11 @@ class Multitool(QMainWindow, QWidget):
                 "Application was minimized to tray",
                 QSystemTrayIcon.Information,
                 2000)
+
+
+    def newMultitoolWindow(self):
+        self.__init__()
+        self.setGeometry(350, 350, 700, 400)
 
 
     # Stacked widgets added to layout start----------------------
@@ -153,7 +169,7 @@ class Multitool(QMainWindow, QWidget):
         pixmap = QPixmap('icons/biohazard.svg')
         msg = QMessageBox(QMessageBox.Information, 'About Multitool',
             "<b>Aplication name:</b> Multitool" +
-            "<br> <b>Version:</b> V0.3 beta" +
+            "<br> <b>Version:</b> V0.3.1 beta" +
             "<br><b>Description:</b> This application puts together many" +
             "<br>widgets into a single application." +
             "<br><b>Details:</b> Programmed and designed with Python 3.5 and PyQt5." +
