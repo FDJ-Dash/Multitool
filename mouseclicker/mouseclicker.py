@@ -34,12 +34,8 @@ class MouseClicker(QWidget):
 
         # Informative label -------------------------
         self.textlabel = QLabel(
-            "This autoclicker only works on linux environments" +
+            "This Mouse Clicker only works on linux environments" +
             "<br>and requires xdotool installed in order to work." +
-            "<br>Github xdotool:" +
-            "<br>https://github.com/jordansissel/xdotool"
-            "<br>Download xdotool:" +
-            "<br>http://www.semicomplete.com/projects/xdotool/"
             "<br><br><b>Press F1 to start</b>" +
             "<br><b>Move mouse to stop</b>", self)
         grid.addWidget(self.textlabel, 0, 1, Qt.AlignTop)
