@@ -92,11 +92,11 @@ class MouseClicker(QWidget):
 
             # os.popen("xdotool click --delay 90 --repeat 1000 1")
             while(self.counter <= self.countEnd):
-                os.popen("xdotool click 1")
-                print("the counter is: " + str(self.counter))
                 if(cursorOldPos != str(QCursor().pos())):
                     print("Mouse moved - loop terminated")
                     break
+                os.popen("xdotool click 1")
+                print("the counter is: " + str(self.counter))
                 self.counter += 1
                 # sets delay between clicks
                 time.sleep(float(self.clkDelay.text()))
