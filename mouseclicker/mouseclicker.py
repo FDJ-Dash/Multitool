@@ -9,6 +9,7 @@ Last edited: January 2018
 """
 
 import sys, os, time
+import signal
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import (QApplication, QComboBox, QGridLayout, 
     QLabel, QLineEdit, QMessageBox, QWidget)
@@ -92,11 +93,11 @@ class MouseClicker(QWidget):
 
             # os.popen("xdotool click --delay 90 --repeat 1000 1")
             while(self.counter <= self.countEnd):
-                os.popen("xdotool click 1")
-                print("the counter is: " + str(self.counter))
                 if(cursorOldPos != str(QCursor().pos())):
                     print("Mouse moved - loop terminated")
                     break
+                os.popen("xdotool click 1")
+                print("the counter is: " + str(self.counter))
                 self.counter += 1
                 # sets delay between clicks
                 time.sleep(float(self.clkDelay.text()))
@@ -125,5 +126,7 @@ class MouseClicker(QWidget):
 if __name__ == '__main__':
 
     app = QApplication(sys.argv)
+    # If the app is sent a Ctrl-C, just die.  There is no state to save
+    signal.signal(signal.SIGINT, signal.SIG_DFL)
     ex = MouseClicker()
     sys.exit(app.exec_())
